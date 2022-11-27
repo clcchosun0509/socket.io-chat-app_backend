@@ -1,6 +1,7 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import * as session from 'express-session';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -14,14 +15,14 @@ import { AuthModule } from './auth/auth.module';
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => {
+      useFactory: (configService: ConfigService) => {
         return {
           type: 'postgres',
-          host: config.get<string>('DB_HOST'),
-          port: config.get<number>('DB_PORT'),
-          username: config.get<string>('DB_USERNAME'),
-          password: config.get<string>('DB_PASSWORD'),
-          database: config.get<string>('DB_NAME'),
+          host: configService.get<string>('DB_HOST'),
+          port: configService.get<number>('DB_PORT'),
+          username: configService.get<string>('DB_USERNAME'),
+          password: configService.get<string>('DB_PASSWORD'),
+          database: configService.get<string>('DB_NAME'),
           synchronize: true,
           entities: [],
         };
@@ -32,4 +33,19 @@ import { AuthModule } from './auth/auth.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private readonly configService: ConfigService) {}
+  
+  configure(consumer: MiddlewareConsumer) {
+    console.log(this.configService.get<string>('SESSION_SECRET'))
+    consumer
+      .apply(
+        session({
+          secret: this.configService.get<string>('SESSION_SECRET'),
+          resave: false,
+          saveUninitialized: false,
+        }),
+      )
+      .forRoutes('*');
+  }
+}

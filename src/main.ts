@@ -4,7 +4,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const config = app.get<ConfigService>(ConfigService);
-  await app.listen(config.get('EXPRESS_PORT'));
+  const configService = app.get<ConfigService>(ConfigService);
+  await app.listen(configService.get('EXPRESS_PORT'));
 }
 bootstrap();
