@@ -4,13 +4,11 @@ import { GoogleOAuthGuard } from './guards/google-oauth.guard';
 
 @Controller('auth')
 export class AuthController {
-  @Get('google-login')
+  @Get('google')
   @UseGuards(GoogleOAuthGuard)
-  googleLogin() {
-    return;
-  }
+  googleLogin() {}
 
-  @Get('google-redirect')
+  @Get('google/callback')
   @UseGuards(GoogleOAuthGuard)
   googleRedirect(@Res() res: Response) {
     res.send(200);

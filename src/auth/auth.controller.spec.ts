@@ -15,4 +15,9 @@ describe('AuthController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
+
+  it('google login returns undefined', async () => {
+    const res = await controller.googleLogin();
+    expect(res).toBeUndefined();
+  })
 });
