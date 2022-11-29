@@ -47,7 +47,9 @@ export class AuthController {
       if (err) {
         return next(err);
       }
-      res.redirect(this.CLIENT_URL);
+      return res
+        .status(HttpStatus.OK)
+        .json({ status: 'success' });
     });
   }
 }
