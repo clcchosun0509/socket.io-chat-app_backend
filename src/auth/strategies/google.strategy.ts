@@ -10,12 +10,15 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     private readonly configService: ConfigService,
     @Inject('AUTH_SERVICE') private readonly authService: AuthService,
   ) {
+    const GOOGLE_CLIENT_ID = configService.get<string>('GOOGLE_CLIENT_ID');
+    const GOOGLE_CLIENT_SECRET = configService.get<string>(
+      'GOOGLE_CLIENT_SECRET',
+    );
+    const EXPRESS_PORT = configService.get<string>('EXPRESS_PORT');
     super({
-      clientID: configService.get<string>('GOOGLE_CLIENT_ID'),
-      clientSecret: configService.get<string>('GOOGLE_CLIENT_SECRET'),
-      callbackURL: `http://localhost:${configService.get<string>(
-        'EXPRESS_PORT',
-      )}/auth/google-redirect`,
+      clientID: GOOGLE_CLIENT_ID,
+      clientSecret: GOOGLE_CLIENT_SECRET,
+      callbackURL: `http://localhost:${EXPRESS_PORT}/auth/google-redirect`,
       scope: ['email', 'profile'],
     });
   }
