@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { RoomMessage } from './room-message.entity';
+import { Message } from './message.entity';
 import { User } from './user.entity';
 
 @Entity()
@@ -25,12 +25,12 @@ export class Room {
   @JoinColumn()
   owner: User;
 
-  @OneToMany(() => RoomMessage, (message) => message.room, {
+  @OneToMany(() => Message, (message) => message.room, {
     cascade: ['insert', 'remove', 'update'],
   })
   @JoinColumn()
-  messages: RoomMessage[];;
+  messages: Message[];
 
-  @UpdateDateColumn({ name: 'updated_at'})
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 }

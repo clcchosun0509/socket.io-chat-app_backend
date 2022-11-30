@@ -1,5 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
-import { Message } from './message.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn,
+} from 'typeorm';
 import { Room } from './room.entity';
 
 @Entity()
@@ -16,10 +22,6 @@ export class User {
   @Column({ nullable: true })
   avatar: string;
 
-  @OneToMany(() => Message, (message) => message.user)
-  @JoinColumn()
-  messages: Message[];
-
-  @ManyToOne(() => Room, (room) => room.users)
-  room: Room
+  @ManyToOne(() => Room, (room) => room.users, { nullable: true })
+  room: Room | null;
 }

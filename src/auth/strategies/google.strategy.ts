@@ -29,6 +29,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       email: emails[0].value,
       username: displayName,
       avatar: photos[0].value,
+      room: null
     };
     return this.authService.validate(user);
   }
