@@ -14,11 +14,13 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     const GOOGLE_CLIENT_SECRET = configService.get<string>(
       'GOOGLE_CLIENT_SECRET',
     );
-    const EXPRESS_PORT = configService.get<string>('EXPRESS_PORT');
+    const GOOGLE_REDIRECT_URL = configService.get<string>(
+      'GOOGLE_REDIRECT_URL',
+    );
     super({
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: `http://localhost:${EXPRESS_PORT}/auth/google-redirect`,
+      callbackURL: GOOGLE_REDIRECT_URL,
       scope: ['email', 'profile'],
     });
   }
