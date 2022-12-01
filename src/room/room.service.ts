@@ -32,8 +32,19 @@ export class RoomService {
     return this.repo.findOneBy({ id });
   }
 
-  findByUser(user: User) {
+  findOwnerRoomByUser(user: User) {
     return this.repo.find({ where: { owner: { id: user.id } } });
+  }
+
+  async findByUser(user: User) {
+    return await this.repo
+      .createQueryBuilder('room')
+      .leftJoinAndSelect('room.users', 'user')
+      .where("user.id = :id", {id: user.id})
+      .leftJoinAndSelect('room.users', 'users')
+      .leftJoinAndSelect('room.owner', 'owner')
+      .leftJoinAndSelect('room.messages', 'message')
+      .getOne()
   }
 
   async remove(id: string) {

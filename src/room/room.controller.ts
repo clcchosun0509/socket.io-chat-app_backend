@@ -30,7 +30,7 @@ export class RoomController {
   @Post()
   @UseGuards(AuthGuard)
   async createRoom(@AuthUser() user: User, @Body() body: CreateRoomDto) {
-    const foundRooms = await this.roomService.findByUser(user);
+    const foundRooms = await this.roomService.findOwnerRoomByUser(user);
     if (foundRooms.length > 0) {
       await this.authService.update(user.id, { room: null });
       await this.roomService.remove(foundRooms[0].id);
