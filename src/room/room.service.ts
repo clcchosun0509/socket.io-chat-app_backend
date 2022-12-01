@@ -51,7 +51,7 @@ export class RoomService {
     }
     const foundUser = room.users.find((roomUser) => roomUser.id === userId);
     if (foundUser) {
-      throw new BadRequestException('already existed user in room');
+      return;
     }
     const user = await this.authService.findOne(userId);
     if (!user) {
@@ -69,7 +69,7 @@ export class RoomService {
     }
     const foundUser = room.users.find((roomUser) => roomUser.id === userId);
     if (!foundUser) {
-      throw new BadRequestException('user not found in room');
+      return;
     }
     await this.authService.update(userId, { room: null });
     room.users = room.users.filter((user) => user.id !== userId);
