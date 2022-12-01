@@ -12,21 +12,22 @@ import { User } from './user.entity';
 
 @Entity()
 export class Room {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   title: string;
 
-  @OneToMany(() => User, (user) => user.room)
+  @OneToMany(() => User, (user) => user.room, { eager: true })
   users: User[];
 
-  @OneToOne(() => User, { createForeignKeyConstraints: false })
+  @OneToOne(() => User, { eager: true })
   @JoinColumn()
   owner: User;
 
   @OneToMany(() => Message, (message) => message.room, {
     cascade: ['insert', 'remove', 'update'],
+    eager: true
   })
   @JoinColumn()
   messages: Message[];

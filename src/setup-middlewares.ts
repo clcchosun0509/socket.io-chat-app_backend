@@ -4,6 +4,8 @@ import * as connectPgSimple from 'connect-pg-simple';
 import { ConfigService } from '@nestjs/config';
 import { Pool, PoolConfig } from 'pg';
 import * as passport from 'passport';
+import { ValidationPipe } from '@nestjs/common';
+
 import { WebSocketAdapter } from './gateway/gateway.adapter';
 
 export default (app: INestApplication) => {
@@ -28,6 +30,7 @@ export default (app: INestApplication) => {
       createTableIfMissing: true,
     }),
   });
+  app.useGlobalPipes(new ValidationPipe());
   app.useWebSocketAdapter(new WebSocketAdapter(app, expressSession));
   app.use(expressSession);
   app.use(passport.initialize());
