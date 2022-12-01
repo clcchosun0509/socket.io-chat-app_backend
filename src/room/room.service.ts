@@ -17,7 +17,7 @@ export class RoomService {
   ) {}
 
   create(title: string, creator: User) {
-    const room = this.repo.create({ title, users: [creator], owner: creator });
+    const room = this.repo.create({ title, users: [], owner: creator });
     return this.repo.save(room);
   }
 

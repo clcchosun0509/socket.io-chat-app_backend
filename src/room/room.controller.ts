@@ -1,10 +1,22 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  UseGuards,
+  BadRequestException,
+} from '@nestjs/common';
+import { isUUID } from 'class-validator';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AuthService } from '../auth/auth.service';
 import { AuthUser } from '../auth/decorators/auth-user.decorator';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { User } from '../entities';
+import { Serialize } from '../interceptors/serialize.interceptor';
 import { CreateRoomDto } from './dtos/create-room.dto';
+import { RoomDto } from './dtos/room.dto';
 import { RoomService } from './room.service';
 
 @Controller('room')
@@ -29,9 +41,25 @@ export class RoomController {
     return room;
   }
 
+  @Get('/:id')
+  @UseGuards(AuthGuard)
+  @Serialize(RoomDto)
+  async getRoom(@Param('id') id: string) {
+    if (!isUUID(id))
+      throw new BadRequestException(
+        `Invalid id, UUID format expected but received ${id}`,
+      );
+    const room = await this.roomService.findOne(id);
+    if (!room) {
+      throw new NotFoundException('room not found');
+    }
+    return room;
+  }
+
   @Get()
   @UseGuards(AuthGuard)
+  @Serialize(RoomDto)
   getRooms() {
-    return this.roomService.findAll()
+    return this.roomService.findAll();
   }
 }
